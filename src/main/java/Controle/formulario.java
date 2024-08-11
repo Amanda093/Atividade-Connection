@@ -6,13 +6,11 @@ import java.text.*;
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-
 import javax.swing.text.MaskFormatter;
-import javax.swing.table.DefaultTableModel;
 
-import java.sql.*;
 import Conexao.conexao;
-import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
+import java.sql.*;
 
 public class formulario extends JFrame {
     conexao con_cliente; // banco de dados
@@ -21,9 +19,11 @@ public class formulario extends JFrame {
     JTextField tCod, tNome, tEmail;
     JFormattedTextField tTel, tData;
     MaskFormatter mTel, mData;
-    JButton bFirst, bLast, bPrevious, bNext,
-            bLimpar, bGravar, bAlterar, bExcluir; // dps adicionar na pagina
-    JTable tbClientes; // datagrid
+    
+    JButton bFirst, bLast, bPrevious, bNext, bLimpar, bGravar, bAlterar, bExcluir; // dps adicionar na pagina
+    ImageIcon imagens[]; // imagens dos botões
+    
+    JTable tb_clientes; // datagrid
     JScrollPane scroll_tb; // container do datagrid
     
     public formulario() {
@@ -32,12 +32,22 @@ public class formulario extends JFrame {
         
         Container tela = getContentPane();
         setTitle("Conexão Java com MySql");
+        tela.setLayout(null);
         setResizable(false);
 
+         // icon da página
+        ImageIcon icone = new ImageIcon("");
+        setIconImage(icone.getImage());
+        
+        // icones dos botões
+        String icones[]={"image/next.png"};
+        
+        
+        // máscara da data e do telefone
         try {
             mData = new MaskFormatter("##/##/####");
-            mData.setPlaceholderCharacter('_');
             mTel = new MaskFormatter("(##)####-####");
+            mData.setPlaceholderCharacter('_');
             mTel.setPlaceholderCharacter('_');
         }
         catch (ParseException erro){}
@@ -64,31 +74,24 @@ public class formulario extends JFrame {
         tTel = new JFormattedTextField(mTel);
         tData = new JFormattedTextField(mData);
         
+        tb_clientes = new javax.swing.JTable();
+        scroll_tb = new javax.swing.JScrollPane();
+
         // setando a posição dos conteúdos na janela
-        rCod.setBounds(50,50,50,20);     tCod.setBounds(120,50,200,20);
-        rNome.setBounds(50,90,100,20);   tNome.setBounds(120,90,80,20);
-        rEmail.setBounds(50,130,300,20); tEmail.setBounds(120,130,300,20);
-        rTel.setBounds(50,170,300,20);   tTel.setBounds(120,170,300,20);
-        rData.setBounds(50,210,300,20);  tData.setBounds(120,210,300,20);
+        rCod.setBounds(50,50,50,20);        tCod.setBounds(120,50,200,20);
+        rNome.setBounds(50,90,100,20);      tNome.setBounds(120,90,80,20);
+        rEmail.setBounds(50,130,300,20);    tEmail.setBounds(120,130,300,20);
+        rTel.setBounds(50,170,300,20);      tTel.setBounds(120,170,300,20);
+        rData.setBounds(50,210,300,20);     tData.setBounds(120,210,300,20);
         
-        tela.add(rCod);   tela.add(tCod);
-        tela.add(rNome);  tela.add(tNome);
-        tela.add(rEmail); tela.add(tEmail);
-        tela.add(rTel);   tela.add(tTel);
-        tela.add(rData);  tela.add(tData);
+        tela.add(rCod);      tela.add(tCod);
+        tela.add(rNome);     tela.add(tNome);
+        tela.add(rEmail);    tela.add(tEmail);
+        tela.add(rTel);      tela.add(tTel);
+        tela.add(rData);     tela.add(tData);
         
         // começo das funcionalidade dos JButton
-        bFirst.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                try {
-                    con_cliente.resultset.first();
-                    mostrar_Dados();
-                } catch (SQLException erro) {
-                    JOptionPane.showMessageDialog(null, "Não foi possível acessar o primeiro registro"
-                            + erro, "Mensagem do Programa", JOptionPane.INFORMATION_MESSAGE);
-                }
-            }
-        });
+        tipo_Botao("First");
         bLast.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 try {
@@ -210,38 +213,41 @@ public class formulario extends JFrame {
             }
         });
         // fim das funcionalidade dos JButton
-         
+        
         // começo da configuração da JTable
-        tbClientes = new javax.swing.JTable();
-        scroll_tb = new javax.swing.JScrollPane();
+        tb_clientes.setBounds(50, 250, 550, 200);
+        scroll_tb.setBounds(50, 250, 550, 200);
         
-        // TABELA NÃO ESTÁ MUDANDO DE POSIÇÃO!!!
-        tbClientes.setBounds(200,500,550,200);
-        scroll_tb.setBounds(200,500,550,200);
-        
-        tela.add(tbClientes);
+        tela.add(tb_clientes);
         tela.add(scroll_tb);
         
-        tbClientes.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+        tb_clientes.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+        tb_clientes.setFont(new java.awt.Font("Arial", 1, 12));
         
-        tbClientes.setFont(new java.awt.Font("Arial", 1, 12));
-        
-        tbClientes.setModel(new javax.swing.table.DefaultTableModel (
-        new Object [][] {
+        tb_clientes.setModel(new javax.swing.table.DefaultTableModel(
+        new Object [] [] {
+            {null, null, null, null, null},
+            {null, null, null, null, null},
+            {null, null, null, null, null},
+            {null, null, null, null, null},
+            {null, null, null, null, null},
+            {null, null, null, null, null},
             {null, null, null, null, null},
             {null, null, null, null, null},
             {null, null, null, null, null},
             {null, null, null, null, null}
         },
         new String [] {"Código", "Nome", "Data Nascimento", "Telefone", "Email"})
-        { 
-            boolean[] canEdit = new boolean [] {
-                false, false, false, false, false };
-        public boolean isCellEditable(int rowIndex, int columnIndex) {
-            return canEdit [columnIndex];}
-        });
-        scroll_tb.setViewportView(tbClientes);
-        tbClientes.setAutoCreateRowSorter(true);
+        {
+        boolean[] canEdit = new boolean []{
+        false, false, false, false, false};
+        
+        public boolean isCellEditable(int rowIndex, int columnIndex){
+            return canEdit [columnIndex];
+        }});
+        
+        scroll_tb.setViewportView(tb_clientes);
+        tb_clientes.setAutoCreateRowSorter(true);
         // fim da configuração da JTable
                 
         setSize(800, 600);
@@ -252,18 +258,30 @@ public class formulario extends JFrame {
         preencherTabela();
         posicionarRegistro();
     }
-    public void tipo_Botao() { // TODO
-        bFirst.addActionListener(new ActionListener() {
+    public JButton tipo_Botao(String nome) {
+        JButton botao = new JButton(nome);
+        botao.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 try {
-                    con_cliente.resultset.first();
-                    mostrar_Dados();
+                    if (nome.equals("Primeiro")) {
+                        con_cliente.resultset.first();
+                        mostrar_Dados(); } 
+                    else if (nome.equals("Primeiro")) {
+                        con_cliente.resultset.first();
+                        mostrar_Dados(); }
+                    else if (nome.equals("Primeiro")) {
+                        con_cliente.resultset.first();
+                        mostrar_Dados(); }
+                    else if (nome.equals("Primeiro")) {
+                        con_cliente.resultset.first();
+                        mostrar_Dados(); }
                 } catch (SQLException erro) {
                     JOptionPane.showMessageDialog(null, "Não foi possível acessar o primeiro registro"
                             + erro, "Mensagem do Programa", JOptionPane.INFORMATION_MESSAGE);
-                }
+                }  
             }
         });
+        return botao;
     }
     public void posicionarRegistro() {
         try {
@@ -287,13 +305,13 @@ public class formulario extends JFrame {
         }
     }
     public void preencherTabela() {
-        tbClientes.getColumnModel().getColumn(0).setPreferredWidth(4);
-        tbClientes.getColumnModel().getColumn(1).setPreferredWidth(150);
-        tbClientes.getColumnModel().getColumn(2).setPreferredWidth(11);
-        tbClientes.getColumnModel().getColumn(3).setPreferredWidth(14);
-        tbClientes.getColumnModel().getColumn(4).setPreferredWidth(100);
+        tb_clientes.getColumnModel().getColumn(0).setPreferredWidth(4);
+        tb_clientes.getColumnModel().getColumn(1).setPreferredWidth(150);
+        tb_clientes.getColumnModel().getColumn(2).setPreferredWidth(11);
+        tb_clientes.getColumnModel().getColumn(3).setPreferredWidth(14);
+        tb_clientes.getColumnModel().getColumn(4).setPreferredWidth(100);
         
-        DefaultTableModel modelo = (DefaultTableModel) tbClientes.getModel();
+        DefaultTableModel modelo = (DefaultTableModel) tb_clientes.getModel();
         modelo.setNumRows(0);
         
         try {
@@ -305,7 +323,6 @@ public class formulario extends JFrame {
                     con_cliente.resultset.getString("dt_nasc"),
                     con_cliente.resultset.getString("telefone"),
                     con_cliente.resultset.getString("email")
-
                 });
             }
         } catch (SQLException erro) {
