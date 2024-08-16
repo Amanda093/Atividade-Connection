@@ -22,8 +22,7 @@ public class formulario extends JFrame {
     JFormattedTextField tTel, tData;
     MaskFormatter mTel, mData;
     
-    JButton bFirst, bLast, bPrevious, bNext, bLimpar, bGravar, bAlterar, bExcluir, bPesquisa;
-    ImageIcon imagens[]; // imagens dos botões
+    JButton bFirst, bLast, bPrevious, bNext, bLimpar, bGravar, bAlterar, bExcluir, bPesquisa, bSair;
     
     JTable tb_clientes; // datagrid
     JScrollPane scroll_tb; // container do datagrid
@@ -40,13 +39,6 @@ public class formulario extends JFrame {
          // icon da página
         ImageIcon icone = new ImageIcon("image/form.png");
         setIconImage(icone.getImage());
-        
-        // icones dos botões
-        String icones[]={"image/editar.png","image/excluir.png","image/filtro.png","image/pesquisa.png","image/salva.png"};
-        imagens = new ImageIcon[5];
-        for(int i = 0; i < 5; i++){
-            imagens[i] = new ImageIcon(icones[i]);
-        }
         
         // máscara da data e do telefone
         try {
@@ -67,17 +59,20 @@ public class formulario extends JFrame {
         rTel = new JLabel("Telefone: "); 
         rData = new JLabel("Data: ");
         rPesquisa = new JLabel("Pesquisar pelo nome do Cliente: ");
+        rPesquisa.setFont(new Font("Segoe UI",Font.BOLD,13));
         
         bFirst = new JButton("Primeiro");
         bLast = new JButton("Ultimo");
         bPrevious = new JButton("Anterior");
         bNext = new JButton("Próximo");
         
-        bLimpar = new JButton(imagens[0]);
+        bLimpar = new JButton("Limpar");
         bGravar = new JButton("Gravar");
         bAlterar = new JButton("Alterar");
         bExcluir = new JButton("Excluir");
+        
         bPesquisa = new JButton("Pesquisar"); 
+        bSair = new JButton("Sair");
         
         tCod = new JTextField("");
         tNome = new JTextField("");
@@ -91,17 +86,19 @@ public class formulario extends JFrame {
         scroll_tb = new javax.swing.JScrollPane();
 
         // setando a posição dos conteúdos na janela
-        rTitulo.setBounds(320,30,500,20);
-        rCod.setBounds(50,70,50,20);        tCod.setBounds(120,70,50,20);
-        rNome.setBounds(50,110,100,20);     tNome.setBounds(120,110,200,20);
-        rEmail.setBounds(50,150,300,20);    tEmail.setBounds(120,150,200,20);
-        rTel.setBounds(50,190,300,20);      tTel.setBounds(120,190,90,20);
-        rData.setBounds(50,230,300,20);     tData.setBounds(120,230,70,20);
+        rTitulo.setBounds(260,30,500,20);
+        rCod.setBounds(50,70,50,20);          tCod.setBounds(120,70,50,20);
+        rNome.setBounds(50,110,100,20);       tNome.setBounds(120,110,200,20);
+        rEmail.setBounds(50,150,300,20);      tEmail.setBounds(120,150,200,20);
+        rTel.setBounds(50,190,300,20);        tTel.setBounds(120,190,90,20);
+        rData.setBounds(50,230,300,20);       tData.setBounds(120,230,70,20);
+        rPesquisa.setBounds(50,550,300,20);   tPesquisa.setBounds(260,550,240,25);
         
-        bFirst.setBounds(50,270,100,25);     bLast.setBounds(150,270,100,25);
-        bPrevious.setBounds(250,270,100,25); bNext.setBounds(350,270,100,25);
-        bLimpar.setBounds(350,70,100,30);    bGravar.setBounds(200,50,200,20);
-        bAlterar.setBounds(400,50,200,20);   bExcluir.setBounds(200,50,200,20);
+        bPesquisa.setBounds(500,550,100,25);  bSair.setBounds(500,110,100,25);
+        bFirst.setBounds(50,270,100,25);      bLast.setBounds(150,270,100,25);
+        bPrevious.setBounds(250,270,100,25);  bNext.setBounds(350,270,100,25);
+        bLimpar.setBounds(500,150,100,25);    bGravar.setBounds(500,190,100,25);
+        bAlterar.setBounds(500,230,100,25);   bExcluir.setBounds(500,270,100,25);
         
         tela.add(rTitulo);   
         tela.add(rCod);      tela.add(tCod);
@@ -109,7 +106,9 @@ public class formulario extends JFrame {
         tela.add(rEmail);    tela.add(tEmail);
         tela.add(rTel);      tela.add(tTel);
         tela.add(rData);     tela.add(tData);
+        tela.add(rPesquisa); tela.add(tPesquisa);
         
+        tela.add(bPesquisa); tela.add(bSair);
         tela.add(bFirst);    tela.add(bLast);
         tela.add(bPrevious); tela.add(bNext);
         tela.add(bLimpar);   tela.add(bGravar);
@@ -121,9 +120,7 @@ public class formulario extends JFrame {
         
         bLimpar.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                tCod.setText("");   tNome.setText("");
-                tEmail.setText(""); tTel.setText("");
-                tData.setText("");  tCod.requestFocus(); }
+                tCod.setText(""); tNome.setText(""); tEmail.setText(""); tTel.setText(""); tData.setText(""); tCod.requestFocus(); }
         });
         bGravar.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
@@ -152,11 +149,10 @@ public class formulario extends JFrame {
                 try {
                     if(tCod.getText().equals("")) {
                         sql = "insert into tbclientes (nome, telefone, email, dt_nasc) values ('" + nome + "','" + telefone + "','" + email + "','" + data_nasc + "')";
-                        msg = "Gravação de um novo registro";
-                    }
+                        msg = "Gravação de um novo registro"; }
                     else {
                         sql = "update tbclientes set nome='" + nome + "',telefone='" + telefone + "', email='" + email + "', dt_nasc='" + data_nasc + "' where cod = " + tCod.getText();
-                        msg = "Alteração de registro";
+                        msg = "Alteração de registro"; 
                     }
                     
                     con_cliente.statement.executeUpdate(sql);
@@ -196,6 +192,21 @@ public class formulario extends JFrame {
                 }
             }
         });
+        bPesquisa.addActionListener(new ActionListener() {
+           public void actionPerformed(ActionEvent e) {
+               try {
+                   String pesquisa = "select * from tbclientes where nome like '" + tPesquisa.getText() + "%'";
+                   con_cliente.executaSQL(pesquisa);
+                   
+                   if(con_cliente.resultset.first()) { preencherTabela(); }
+                   else {
+                       JOptionPane.showMessageDialog(null, "\n Não existe dados com este paramêtro!", "Mensagem do Programa", JOptionPane.INFORMATION_MESSAGE);                       
+                   }
+               } catch (SQLException errosql) {
+                   JOptionPane.showMessageDialog(null,"\n Os dados digitados não foram localizados!! :\n " + errosql, "Mensagem do Programa", JOptionPane.INFORMATION_MESSAGE);
+               }
+           } 
+        });
         // fim das funcionalidade dos JButton
         
         // começo da configuração da JTable
@@ -210,12 +221,6 @@ public class formulario extends JFrame {
         
         tb_clientes.setModel(new javax.swing.table.DefaultTableModel(
         new Object [] [] {
-            {null, null, null, null, null},
-            {null, null, null, null, null},
-            {null, null, null, null, null},
-            {null, null, null, null, null},
-            {null, null, null, null, null},
-            {null, null, null, null, null},
             {null, null, null, null, null},
             {null, null, null, null, null},
             {null, null, null, null, null},
@@ -240,14 +245,28 @@ public class formulario extends JFrame {
         bPrevious.setToolTipText("Pressione ALT + A para executar a ação deste botão");
         bNext.setToolTipText("Pressione ALT + R para executar a ação deste botão");
         
+        bSair.setToolTipText("Pressione ALT + S para executar a ação deste botão");
+        bLimpar.setToolTipText("Pressione ALT + L para executar a ação deste botão");
+        bGravar.setToolTipText("Pressione ALT + G para executar a ação deste botão");
+        bAlterar.setToolTipText("Pressione ALT + T para executar a ação deste botão");
+        bExcluir.setToolTipText("Pressione ALT + E para executar a ação deste botão");
+        bPesquisa.setToolTipText("Pressione ALT + Q para executar a ação deste botão");
+        
         // atalhos
-        getRootPane().setDefaultButton(bLimpar);
+        getRootPane().setDefaultButton(bNext);
         bFirst.setMnemonic(KeyEvent.VK_P);
         bLast.setMnemonic(KeyEvent.VK_U);
         bPrevious.setMnemonic(KeyEvent.VK_A);
         bNext.setMnemonic(KeyEvent.VK_R);
         
-        setSize(800,600);
+        bSair.setMnemonic(KeyEvent.VK_S);
+        bLimpar.setMnemonic(KeyEvent.VK_L);
+        bGravar.setMnemonic(KeyEvent.VK_G);
+        bAlterar.setMnemonic(KeyEvent.VK_T);
+        bExcluir.setMnemonic(KeyEvent.VK_E);
+        bPesquisa.setMnemonic(KeyEvent.VK_Q);
+        
+        setSize(680,650);
         setVisible(true);
         setLocationRelativeTo(null);
         
@@ -273,7 +292,7 @@ public class formulario extends JFrame {
                     
                     mostrar_Dados(); // apresenta os dados
                 } catch (SQLException erro) {
-                    JOptionPane.showMessageDialog(null, "Não foi possível acessar o primeiro registro"
+                    JOptionPane.showMessageDialog(null, "Não foi possível acessar o registro"
                             + erro, "Mensagem do Programa", JOptionPane.INFORMATION_MESSAGE);
                 }  
             }
