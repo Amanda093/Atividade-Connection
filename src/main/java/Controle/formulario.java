@@ -118,6 +118,16 @@ public class formulario extends JFrame {
         tipo_Botao(bFirst);    tipo_Botao(bLast);
         tipo_Botao(bPrevious); tipo_Botao(bNext);
         
+        bSair.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                int option;
+                Object[] botoes = {"Sim", "Não"};
+
+                option = JOptionPane.showOptionDialog(null,"Deseja mesmo fechar a janela?", "Fechar", JOptionPane.YES_NO_OPTION,JOptionPane.QUESTION_MESSAGE,null, botoes, botoes[0]);
+                if (option == JOptionPane.YES_OPTION)
+                System.exit(0);  
+            }
+        });
         bLimpar.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 tCod.setText(""); tNome.setText(""); tEmail.setText(""); tTel.setText(""); tData.setText(""); tCod.requestFocus(); }
@@ -344,9 +354,5 @@ public class formulario extends JFrame {
             JOptionPane.showMessageDialog(null, "\n Erro ao listar dados da tabela!! :\n " + erro,
                     "Mensagem do Programa", JOptionPane.INFORMATION_MESSAGE);
         }
-    }
-    public static void main(String args[]){
-        formulario app = new formulario();
-        app.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }
 }
